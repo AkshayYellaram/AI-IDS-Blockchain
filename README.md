@@ -2,7 +2,7 @@
 
 
 
-An AI-powered Intrusion Detection System (IDS) that combines machine learning-based network traffic analysis with blockchain-backed security alert storage.
+An AI-powered Intrusion Detection System (IDS) that combines machine-learning-based network traffic analysis with blockchain-backed storage for security alerts.
 
 
 
@@ -10,7 +10,7 @@ An AI-powered Intrusion Detection System (IDS) that combines machine learning-ba
 
 
 
-\*\*AI-IDS-Blockchain\*\* is a cybersecurity project designed to analyze network traffic, identify potentially malicious activity using machine-learning models, and store security alerts through a blockchain-based component.
+\*\*AI-IDS-Blockchain\*\* is a cybersecurity project that analyzes network traffic, identifies potentially malicious activity using machine-learning models, and stores security alerts on a blockchain.
 
 
 
