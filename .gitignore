@@ -1,0 +1,37 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Large ML models
+*.pkl
+*.joblib
+*.h5
+*.keras
+*.pt
+*.pth
+
+# Datasets
+dataset/
+*.csv
+
+# Network captures
+*.pcap
+*.pcapng
+
+# Generated files / logs
+*.log
+reports/
+outputs/
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

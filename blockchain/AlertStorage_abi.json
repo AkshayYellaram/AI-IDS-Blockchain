@@ -1,0 +1,231 @@
+[
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "alertHash",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "timestamp",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "srcIp",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "dstIp",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "attackProbability",
+				"type": "uint256"
+			}
+		],
+		"name": "AlertStored",
+		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_alertHash",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_timestamp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_srcIp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "_dstIp",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_srcPort",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_dstPort",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_protocol",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_attackProbability",
+				"type": "uint256"
+			}
+		],
+		"name": "storeAlert",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "alertCount",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "alerts",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "alertHash",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "timestamp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "srcIp",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "dstIp",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "srcPort",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "dstPort",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "protocol",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "attackProbability",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
+		"name": "getAlert",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "uint256",
+						"name": "id",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "alertHash",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "timestamp",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "srcIp",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "dstIp",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "srcPort",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "dstPort",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "protocol",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "attackProbability",
+						"type": "uint256"
+					}
+				],
+				"internalType": "struct AlertStorage.Alert",
+				"name": "",
+				"type": "tuple"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

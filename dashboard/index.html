@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI-Powered IDS Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0b1120;
+            color: #e5e7eb;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1500px;
+            margin: auto;
+        }
+
+        /* HEADER */
+
+        header {
+            padding: 25px 0 15px;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 8px 0 0;
+            color: #94a3b8;
+        }
+
+        /* CONTROL BAR */
+
+        .control-bar {
+            margin-top: 20px;
+            padding: 18px;
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #64748b;
+        }
+
+        .status-dot.running {
+            background: #22c55e;
+            box-shadow: 0 0 12px #22c55e;
+        }
+
+        .status-dot.stopped {
+            background: #ef4444;
+        }
+
+        button {
+            border: none;
+            padding: 11px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        #startBtn {
+            background: #16a34a;
+            color: white;
+        }
+
+        #startBtn:hover {
+            background: #15803d;
+        }
+
+        #stopBtn {
+            background: #dc2626;
+            color: white;
+        }
+
+        #stopBtn:hover {
+            background: #b91c1c;
+        }
+
+        button:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        /* CARDS */
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .card-title {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* SECTIONS */
+
+        .section {
+            margin-top: 25px;
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .section-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th {
+            text-align: left;
+            color: #94a3b8;
+            font-size: 12px;
+            padding: 13px 15px;
+            background: #0f172a;
+            border-bottom: 1px solid #1f2937;
+        }
+
+        td {
+            padding: 13px 15px;
+            border-bottom: 1px solid #1f2937;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: #172033;
+        }
+
+        .attack {
+            color: #f87171;
+            font-weight: bold;
+        }
+
+        .normal {
+            color: #4ade80;
+            font-weight: bold;
+        }
+
+        .alert {
+            color: #fb7185;
+            font-weight: bold;
+        }
+
+        .blockchain {
+            color: #60a5fa;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            color: #64748b;
+            padding: 30px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 900px) {
+
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .control-bar {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            button {
+                margin-left: 0;
+                margin-right: 8px;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <header>
+
+        <h1>
+            AI-Powered Intrusion Detection System
+        </h1>
+
+        <p>
+            Machine Learning + Blockchain Security Monitoring
+        </p>
+
+    </header>
+
+
+    <!-- CONTROL BAR -->
+
+    <div class="control-bar">
+
+        <div class="status">
+
+            <div
+                id="statusDot"
+                class="status-dot stopped">
+            </div>
+
+            <span id="statusText">
+                IDS STOPPED
+            </span>
+
+        </div>
+
+
+        <div>
+
+            <button
+                id="startBtn"
+                onclick="startIDS()">
+                START LIVE IDS
+            </button>
+
+            <button
+                id="stopBtn"
+                onclick="stopIDS()"
+                disabled>
+                STOP IDS
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- STAT CARDS -->
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-title">
+                LIVE FLOWS
+            </div>
+
+            <div
+                id="flowCount"
+                class="card-value">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                ML ATTACK PREDICTIONS
+            </div>
+
+            <div
+                id="attackCount"
+                class="card-value">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                SECURITY ALERTS
+            </div>
+
+            <div
+                id="alertCount"
+                class="card-value">
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                BLOCKCHAIN ALERTS
+            </div>
+
+            <div
+                id="blockchainCount"
+                class="card-value">
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- LIVE RESULTS -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Live Network Analysis
+            </h2>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            TIME
+                        </th>
+
+                        <th>
+                            SOURCE
+                        </th>
+
+                        <th>
+                            DESTINATION
+                        </th>
+
+                        <th>
+                            PROTOCOL
+                        </th>
+
+                        <th>
+                            PACKETS
+                        </th>
+
+                        <th>
+                            PREDICTION
+                        </th>
+
+                        <th>
+                            ATTACK PROBABILITY
+                        </th>
+
+                        <th>
+                            STATUS
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="resultsTable">
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            class="empty">
+                            Start the IDS to begin live network monitoring.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- SECURITY ALERTS -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Security Alerts
+            </h2>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            TIME
+                        </th>
+
+                        <th>
+                            SOURCE
+                        </th>
+
+                        <th>
+                            DESTINATION
+                        </th>
+
+                        <th>
+                            PROTOCOL
+                        </th>
+
+                        <th>
+                            ATTACK PROBABILITY
+                        </th>
+
+                        <th>
+                            REASON
+                        </th>
+
+                        <th>
+                            BLOCK
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="alertsTable">
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="empty">
+                            No live security alerts.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- BLOCKCHAIN RECORDS -->
+
+    <div class="section">
+
+        <div class="section-header">
+
+            <h2>
+                Blockchain Alert Records
+            </h2>
+
+        </div>
+
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            ID
+                        </th>
+
+                        <th>
+                            TIME
+                        </th>
+
+                        <th>
+                            SOURCE
+                        </th>
+
+                        <th>
+                            DESTINATION
+                        </th>
+
+                        <th>
+                            PROTOCOL
+                        </th>
+
+                        <th>
+                            ATTACK PROBABILITY
+                        </th>
+
+                        <th>
+                            HASH
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="blockchainTable">
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            class="empty">
+                            Loading blockchain records...
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <footer>
+
+        AI-Powered IDS • Random Forest • Scapy • SHA-256 • Ethereum/Ganache
+
+    </footer>
+
+</div>
+
+
+<script>
+
+    // ========================================================
+    // API HELPER
+    // ========================================================
+
+    async function api(url, options = {}) {
+
+        const response = await fetch(url, options);
+
+        if (!response.ok) {
+
+            throw new Error(
+                "API error: " + response.status
+            );
+
+        }
+
+        return await response.json();
+    }
+
+
+    // ========================================================
+    // START IDS
+    // ========================================================
+
+    async function startIDS() {
+
+        try {
+
+            const data = await api(
+                "/api/ids/start",
+                {
+                    method: "POST"
+                }
+            );
+
+            console.log("IDS started:", data);
+
+            updateStatus(data.status);
+
+            await refreshDashboard();
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Could not start IDS.\n\n" +
+                error.message
+            );
+
+        }
+
+    }
+
+
+    // ========================================================
+    // STOP IDS
+    // ========================================================
+
+    async function stopIDS() {
+
+        try {
+
+            const data = await api(
+                "/api/ids/stop",
+                {
+                    method: "POST"
+                }
+            );
+
+            console.log("IDS stopped:", data);
+
+            updateStatus(data.status);
+
+            await refreshDashboard();
+
+        }
+        catch (error) {
+
+            console.error(error);
+
+            alert(
+                "Could not stop IDS.\n\n" +
+                error.message
+            );
+
+        }
+
+    }
+
+
+    // ========================================================
+    // UPDATE STATUS
+    // ========================================================
+
+    function updateStatus(status) {
+
+        const dot =
+            document.getElementById("statusDot");
+
+        const text =
+            document.getElementById("statusText");
+
+        const startButton =
+            document.getElementById("startBtn");
+
+        const stopButton =
+            document.getElementById("stopBtn");
+
+
+        if (status.running) {
+
+            dot.className =
+                "status-dot running";
+
+            text.textContent =
+                "IDS CAPTURING LIVE TRAFFIC";
+
+            startButton.disabled = true;
+
+            stopButton.disabled = false;
+
+        }
+        else {
+
+            dot.className =
+                "status-dot stopped";
+
+            text.textContent =
+                "IDS STOPPED";
+
+            startButton.disabled = false;
+
+            stopButton.disabled = true;
+
+        }
+
+    }
+
+
+    // ========================================================
+    // REFRESH IDS STATUS
+    // ========================================================
+
+    async function refreshStatus() {
+
+        try {
+
+            const status =
+                await api("/api/ids/status");
+
+            updateStatus(status);
+
+            document.getElementById("flowCount")
+                .textContent = status.flows;
+
+            document.getElementById("attackCount")
+                .textContent = status.attacks;
+
+            document.getElementById("alertCount")
+                .textContent = status.alerts;
+
+        }
+        catch (error) {
+
+            console.error(
+                "Status error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ========================================================
+    // REFRESH RESULTS
+    // ========================================================
+
+    async function refreshResults() {
+
+        try {
+
+            const data =
+                await api("/api/ids/results");
+
+            const results =
+                data.results || [];
+
+            const table =
+                document.getElementById(
+                    "resultsTable"
+                );
+
+
+            if (results.length === 0) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="empty">
+                            No flows analyzed yet.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            table.innerHTML =
+                results.map(item => {
+
+                    const predictionClass =
+                        item.prediction === "ATTACK"
+                            ? "attack"
+                            : "normal";
+
+                    const statusClass =
+                        item.security_alert
+                            ? "alert"
+                            : "normal";
+
+                    const predictionText =
+                        item.prediction;
+
+                    const statusText =
+                        item.security_alert
+                            ? "SECURITY ALERT"
+                            : "MONITORED";
+
+
+                    const time =
+                        formatTime(
+                            item.timestamp
+                        );
+
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${time}
+                            </td>
+
+                            <td>
+                                ${item.src_ip}:${item.src_port}
+                            </td>
+
+                            <td>
+                                ${item.dst_ip}:${item.dst_port}
+                            </td>
+
+                            <td>
+                                ${item.protocol}
+                            </td>
+
+                            <td>
+                                ${item.packets}
+                            </td>
+
+                            <td class="${predictionClass}">
+                                ${predictionText}
+                            </td>
+
+                            <td>
+                                ${(
+                                    item.attack_probability * 100
+                                ).toFixed(2)}%
+                            </td>
+
+                            <td class="${statusClass}">
+                                ${statusText}
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }).join("");
+
+        }
+        catch (error) {
+
+            console.error(
+                "Results error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ========================================================
+    // REFRESH SECURITY ALERTS
+    // ========================================================
+
+    async function refreshAlerts() {
+
+        try {
+
+            const data =
+                await api("/api/ids/alerts");
+
+            const alerts =
+                data.alerts || [];
+
+            const table =
+                document.getElementById(
+                    "alertsTable"
+                );
+
+
+            if (alerts.length === 0) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty">
+                            No live security alerts.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            table.innerHTML =
+                alerts.map(alert => {
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${formatTime(alert.timestamp)}
+                            </td>
+
+                            <td>
+                                ${alert.src_ip}:${alert.src_port}
+                            </td>
+
+                            <td>
+                                ${alert.dst_ip}:${alert.dst_port}
+                            </td>
+
+                            <td>
+                                ${alert.protocol}
+                            </td>
+
+                            <td class="alert">
+                                ${alert.attack_probability}%
+                            </td>
+
+                            <td>
+                                ${alert.alert_reason}
+                            </td>
+
+                            <td class="blockchain">
+                                ${
+                                    alert.blockchain_block
+                                    ? "Block " +
+                                      alert.blockchain_block
+                                    : "Pending"
+                                }
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }).join("");
+
+        }
+        catch (error) {
+
+            console.error(
+                "Alerts error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ========================================================
+    // REFRESH BLOCKCHAIN
+    // ========================================================
+
+    async function refreshBlockchain() {
+
+        try {
+
+            const data =
+                await api(
+                    "/api/blockchain/alerts"
+                );
+
+            const alerts =
+                data.alerts || [];
+
+            const table =
+                document.getElementById(
+                    "blockchainTable"
+                );
+
+
+            document.getElementById(
+                "blockchainCount"
+            ).textContent = alerts.length;
+
+
+            if (alerts.length === 0) {
+
+                table.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="empty">
+                            No blockchain records.
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            table.innerHTML =
+                alerts.slice(0, 20).map(alert => {
+
+                    return `
+
+                        <tr>
+
+                            <td>
+                                ${alert.id}
+                            </td>
+
+                            <td>
+                                ${formatTime(alert.timestamp)}
+                            </td>
+
+                            <td>
+                                ${alert.src_ip}:${alert.src_port}
+                            </td>
+
+                            <td>
+                                ${alert.dst_ip}:${alert.dst_port}
+                            </td>
+
+                            <td>
+                                ${alert.protocol}
+                            </td>
+
+                            <td class="alert">
+                                ${alert.attack_probability}%
+                            </td>
+
+                            <td
+                                title="${alert.hash}"
+                                style="
+                                    max-width:180px;
+                                    overflow:hidden;
+                                    text-overflow:ellipsis;
+                                    white-space:nowrap;
+                                "
+                            >
+                                ${alert.hash}
+                            </td>
+
+                        </tr>
+
+                    `;
+
+                }).join("");
+
+        }
+        catch (error) {
+
+            console.error(
+                "Blockchain error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    // ========================================================
+    // FORMAT TIME
+    // ========================================================
+
+    function formatTime(timestamp) {
+
+        if (!timestamp) {
+            return "-";
+        }
+
+        try {
+
+            const date =
+                new Date(timestamp);
+
+            return date.toLocaleTimeString();
+
+        }
+        catch {
+
+            return timestamp;
+
+        }
+
+    }
+
+
+    // ========================================================
+    // REFRESH EVERYTHING
+    // ========================================================
+
+    async function refreshDashboard() {
+
+        await Promise.all([
+            refreshStatus(),
+            refreshResults(),
+            refreshAlerts(),
+            refreshBlockchain()
+        ]);
+
+    }
+
+
+    // ========================================================
+    // INITIAL LOAD
+    // ========================================================
+
+    refreshDashboard();
+
+
+    // ========================================================
+    // LIVE REFRESH
+    // ========================================================
+
+    setInterval(
+        refreshDashboard,
+        1000
+    );
+
+</script>
+
+</body>
+
+</html>

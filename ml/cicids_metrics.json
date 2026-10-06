@@ -1,0 +1,59 @@
+{
+    "random_forest": {
+        "accuracy": 0.9926239457221997,
+        "precision": 0.9918877584945808,
+        "recall": 0.9923496540713145,
+        "f1": 0.9921186525223638,
+        "roc_auc": 0.9990639128873552,
+        "training_seconds": 9.50260305404663,
+        "confusion_matrix": [
+            [
+                16977,
+                122
+            ],
+            [
+                115,
+                14917
+            ]
+        ],
+        "model_file": "C:\\Users\\aksha\\Desktop\\AI-IDS-Blockchain\\ml\\cicids_random_forest.pkl"
+    },
+    "extra_trees": {
+        "accuracy": 0.991752513149295,
+        "precision": 0.9905654109361505,
+        "recall": 0.9918174560936669,
+        "f1": 0.9911910381278463,
+        "roc_auc": 0.9971843660440197,
+        "training_seconds": 5.820016384124756,
+        "confusion_matrix": [
+            [
+                16957,
+                142
+            ],
+            [
+                123,
+                14909
+            ]
+        ],
+        "model_file": "C:\\Users\\aksha\\Desktop\\AI-IDS-Blockchain\\ml\\cicids_extra_trees.pkl"
+    },
+    "gradient_boosting": {
+        "accuracy": 0.9941178301328935,
+        "precision": 0.9900297127764939,
+        "recall": 0.9974720596061735,
+        "f1": 0.9937369519832986,
+        "roc_auc": 0.9995835618520714,
+        "training_seconds": 71.95730257034302,
+        "confusion_matrix": [
+            [
+                16948,
+                151
+            ],
+            [
+                38,
+                14994
+            ]
+        ],
+        "model_file": "C:\\Users\\aksha\\Desktop\\AI-IDS-Blockchain\\ml\\cicids_gradient_boosting.pkl"
+    }
+}
