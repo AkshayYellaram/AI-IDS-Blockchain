@@ -1,6 +1,8 @@
 import threading
 import time
+import os
 from datetime import datetime
+from pathlib import Path
 
 import pandas as pd
 import joblib
@@ -14,11 +16,13 @@ from blockchain.blockchain_logger import BlockchainLogger
 # CONFIGURATION
 # ============================================================
 
-INTERFACE = conf.ifaces.dev_from_index(5)
+PROJECT_ROOT = Path(__file__).resolve().parent
+DEFAULT_ROUTE_INTERFACE = conf.route.route("0.0.0.0")[0]
+INTERFACE = os.getenv("IDS_INTERFACE") or DEFAULT_ROUTE_INTERFACE or conf.iface
 
-MODEL_FILE = "ml/ids_model.pkl"
+MODEL_FILE = PROJECT_ROOT / "ml" / "ids_model.pkl"
 
-ALERT_THRESHOLD = 0.80
+ALERT_THRESHOLD = 0.60
 
 # A flow is analyzed after no new packets have been seen
 # for this amount of time.
@@ -48,6 +52,7 @@ class IDSEngine:
         print("[IDS] ML model loaded.")
 
         self.running = False
+        self.capture_error = None
 
         self.capture_thread = None
         self.analysis_thread = None
@@ -424,11 +429,6 @@ class IDSEngine:
         # ML prediction
         # ----------------------------------------------------
 
-        prediction = self.model.predict(
-            dataframe
-        )[0]
-
-
         probabilities = self.model.predict_proba(
             dataframe
         )[0]
@@ -443,9 +443,12 @@ class IDSEngine:
         )
 
 
+        # Use the configured confidence cutoff for the visible prediction too.
+        # sklearn's default predict() boundary is usually 50%, which made
+        # borderline flows appear as attacks even though they were not alerts.
         result = (
             "ATTACK"
-            if prediction == 1
+            if attack_probability >= ALERT_THRESHOLD
             else "NORMAL"
         )
 
@@ -471,20 +474,8 @@ class IDSEngine:
 
 
         elif result == "ATTACK":
-
-            if attack_probability >= ALERT_THRESHOLD:
-
-                is_alert = True
-
-                reason = (
-                    "ML_ATTACK_HIGH_CONFIDENCE"
-                )
-
-            else:
-
-                reason = (
-                    "BELOW_ALERT_THRESHOLD"
-                )
+            is_alert = True
+            reason = "ML_ATTACK_ABOVE_THRESHOLD"
 
 
         # ====================================================
@@ -559,6 +550,12 @@ class IDSEngine:
 
         if is_alert:
 
+            # Detection is independent of blockchain availability. Keep the
+            # alert visible in the dashboard even if Ganache is offline.
+            with self.lock:
+                self.alerts.append(result_data)
+                self.alerts = self.alerts[-100:]
+
             self.store_blockchain_alert(
                 result_data
             )
@@ -628,17 +625,6 @@ class IDSEngine:
             )
 
 
-            with self.lock:
-
-                self.alerts.append(
-                    alert.copy()
-                )
-
-                self.alerts = (
-                    self.alerts[-100:]
-                )
-
-
             print()
             print(
                 "[IDS] SECURITY ALERT STORED ON BLOCKCHAIN"
@@ -686,18 +672,18 @@ class IDSEngine:
         )
 
 
-        sniff(
-
-            iface=INTERFACE,
-
-            prn=self.packet_callback,
-
-            store=False,
-
-            stop_filter=
-                lambda packet:
-                not self.running
-        )
+        try:
+            while self.running:
+                sniff(
+                    iface=INTERFACE,
+                    prn=self.packet_callback,
+                    store=False,
+                    timeout=1
+                )
+        except Exception as error:
+            self.capture_error = str(error)
+            self.running = False
+            print("[IDS] Packet capture failed:", error)
 
 
         print(
@@ -778,7 +764,7 @@ class IDSEngine:
                     print(
                         "[IDS] Flow analyzed:",
                         result["src_ip"],
-                        "→",
+                        "->",
                         result["dst_ip"],
                         result["protocol"],
                         "packets=",
@@ -831,6 +817,7 @@ class IDSEngine:
 
 
         self.running = True
+        self.capture_error = None
 
 
         # Reset current session
@@ -941,7 +928,13 @@ class IDSEngine:
                     attack_count,
 
                 "alerts":
-                    alert_count
+                    alert_count,
+
+                "capture_error":
+                    self.capture_error,
+
+                "interface":
+                    str(INTERFACE)
             }
 
 
@@ -968,11 +961,10 @@ class IDSEngine:
 
         with self.lock:
 
-            return list(
-                reversed(
-                    self.alerts[-50:]
-                )
-            )
+            return [
+                alert.copy()
+                for alert in reversed(self.alerts[-50:])
+            ]
 
 
 # ============================================================

@@ -12,153 +12,301 @@
             box-sizing: border-box;
         }
 
+        :root {
+            color-scheme: dark;
+            --surface: rgba(17, 27, 47, 0.92);
+            --surface-raised: #14213a;
+            --border: rgba(148, 163, 184, 0.14);
+            --muted: #91a0b8;
+            --text: #e6edf8;
+            --accent: #73a7ff;
+            --green: #48d6a1;
+            --red: #ff7185;
+            --amber: #f4bd62;
+        }
+
         body {
             margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #0b1120;
-            color: #e5e7eb;
+            min-height: 100vh;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background:
+                radial-gradient(ellipse at 15% -10%, rgba(57, 101, 171, 0.2), transparent 42%),
+                radial-gradient(ellipse at 100% 10%, rgba(37, 137, 129, 0.09), transparent 30%),
+                #0a1020;
+            color: var(--text);
         }
 
         .container {
-            width: 94%;
-            max-width: 1500px;
+            width: min(100% - 48px, 1480px);
             margin: auto;
         }
 
-        /* HEADER */
-
         header {
-            padding: 25px 0 15px;
-            border-bottom: 1px solid #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            padding: 34px 0 24px;
+            border-bottom: 1px solid var(--border);
         }
 
         header h1 {
             margin: 0;
-            font-size: 28px;
+            font-size: clamp(23px, 3vw, 31px);
+            letter-spacing: -0.04em;
         }
 
         header p {
-            margin: 8px 0 0;
-            color: #94a3b8;
+            margin: 9px 0 0;
+            color: var(--muted);
+            font-size: 14px;
         }
 
-        /* CONTROL BAR */
+        .eyebrow {
+            margin: 0 0 8px;
+            color: var(--accent);
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.16em;
+        }
+
+        .connection {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            flex-shrink: 0;
+            padding: 10px 13px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--muted);
+            background: rgba(17, 27, 47, 0.72);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .connection-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #718096;
+        }
+
+        .connection.online .connection-dot {
+            background: var(--green);
+            box-shadow: 0 0 12px rgba(72, 214, 161, 0.65);
+        }
+
+        .connection.offline .connection-dot {
+            background: var(--red);
+        }
 
         .control-bar {
-            margin-top: 20px;
-            padding: 18px;
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-
+            margin-top: 24px;
+            padding: 17px 20px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 15px;
+            gap: 18px;
             flex-wrap: wrap;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
         }
 
         .status {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: bold;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: 750;
+            letter-spacing: 0.02em;
         }
 
         .status-dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: #64748b;
+            background: #718096;
         }
 
         .status-dot.running {
-            background: #22c55e;
-            box-shadow: 0 0 12px #22c55e;
+            background: var(--green);
+            box-shadow: 0 0 14px rgba(72, 214, 161, 0.75);
         }
 
         .status-dot.stopped {
-            background: #ef4444;
+            background: var(--muted);
+        }
+
+        .status-dot.unavailable {
+            background: var(--amber);
         }
 
         button {
-            border: none;
-            padding: 11px 20px;
-            border-radius: 8px;
+            border: 1px solid transparent;
+            padding: 11px 16px;
+            border-radius: 9px;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 750;
             cursor: pointer;
-            margin-left: 8px;
+            transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+        }
+
+        button:not(:disabled):hover {
+            transform: translateY(-1px);
+        }
+
+        button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
         }
 
         #startBtn {
-            background: #16a34a;
-            color: white;
+            background: #167e65;
+            color: #f3fffb;
         }
 
         #startBtn:hover {
-            background: #15803d;
+            background: #1b9878;
         }
 
         #stopBtn {
-            background: #dc2626;
-            color: white;
+            background: rgba(255, 113, 133, 0.1);
+            border-color: rgba(255, 113, 133, 0.25);
+            color: #ff9baa;
         }
 
         #stopBtn:hover {
-            background: #b91c1c;
+            background: rgba(255, 113, 133, 0.2);
         }
 
         button:disabled {
-            opacity: 0.45;
+            opacity: 0.42;
             cursor: not-allowed;
         }
-
-        /* CARDS */
 
         .cards {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-top: 20px;
+            gap: 15px;
+            margin-top: 16px;
         }
 
         .card {
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 22px;
+            position: relative;
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 19px 20px;
+        }
+
+        .card::after {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            height: 2px;
+            background: var(--card-accent, var(--accent));
+            content: "";
+            opacity: 0.8;
+        }
+
+        .card:nth-child(2) {
+            --card-accent: var(--red);
+        }
+
+        .card:nth-child(3) {
+            --card-accent: var(--amber);
+        }
+
+        .card:nth-child(4) {
+            --card-accent: var(--green);
         }
 
         .card-title {
-            color: #94a3b8;
-            font-size: 14px;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.09em;
         }
 
         .card-value {
-            font-size: 32px;
-            font-weight: bold;
-            margin-top: 10px;
+            margin-top: 12px;
+            font-size: clamp(27px, 3vw, 34px);
+            font-weight: 750;
+            letter-spacing: -0.04em;
+            font-variant-numeric: tabular-nums;
         }
 
-        /* SECTIONS */
+        .card-note {
+            margin-top: 5px;
+            color: #74839c;
+            font-size: 11px;
+        }
 
         .section {
-            margin-top: 25px;
-            background: #111827;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
+            margin-top: 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
             overflow: hidden;
         }
 
         .section-header {
-            padding: 18px 20px;
-            border-bottom: 1px solid #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 16px 19px;
+            border-bottom: 1px solid var(--border);
         }
 
         .section-header h2 {
             margin: 0;
-            font-size: 18px;
+            font-size: 15px;
+            letter-spacing: -0.015em;
+        }
+
+        .section-description {
+            margin: 5px 0 0;
+            color: var(--muted);
+            font-size: 11px;
+        }
+
+        .updated {
+            flex-shrink: 0;
+            color: #74839c;
+            font-size: 11px;
+        }
+
+        .table-tools {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-tools input,
+        .table-tools select {
+            min-height: 34px;
+            padding: 7px 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: #0d1729;
+            color: var(--text);
+            font: inherit;
+            font-size: 11px;
+        }
+
+        .table-tools input {
+            width: min(230px, 45vw);
+        }
+
+        .table-tools input:focus-visible,
+        .table-tools select:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
         }
 
         .table-container {
@@ -168,76 +316,117 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 900px;
+            min-width: 760px;
         }
 
         th {
             text-align: left;
-            color: #94a3b8;
-            font-size: 12px;
-            padding: 13px 15px;
-            background: #0f172a;
-            border-bottom: 1px solid #1f2937;
+            color: #8e9db5;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            padding: 12px 15px;
+            background: rgba(9, 16, 31, 0.42);
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
         }
 
         td {
-            padding: 13px 15px;
-            border-bottom: 1px solid #1f2937;
-            font-size: 13px;
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.09);
+            color: #d4deed;
+            font-size: 12px;
+            white-space: nowrap;
         }
 
-        tr:hover {
-            background: #172033;
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        tbody tr:hover {
+            background: rgba(115, 167, 255, 0.045);
         }
 
         .attack {
-            color: #f87171;
-            font-weight: bold;
+            color: #ff8394;
+            font-weight: 750;
         }
 
         .normal {
-            color: #4ade80;
-            font-weight: bold;
+            color: #56d7a2;
+            font-weight: 750;
         }
 
         .alert {
-            color: #fb7185;
-            font-weight: bold;
+            color: #ff8394;
+            font-weight: 750;
         }
 
         .blockchain {
-            color: #60a5fa;
-            font-weight: bold;
+            color: #80b5ff;
+            font-weight: 700;
         }
 
         .empty {
             text-align: center;
-            color: #64748b;
-            padding: 30px;
+            color: #8290a7;
+            padding: 34px 20px;
+            white-space: normal;
         }
 
-        /* FOOTER */
+        .hash {
+            display: inline-block;
+            max-width: 190px;
+            overflow: hidden;
+            color: #9aabc5;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+            text-overflow: ellipsis;
+            vertical-align: bottom;
+        }
+
+        .notice {
+            display: none;
+            margin-top: 15px;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 113, 133, 0.28);
+            border-radius: 10px;
+            background: rgba(255, 113, 133, 0.08);
+            color: #ffb1bc;
+            font-size: 12px;
+        }
+
+        .notice.visible {
+            display: block;
+        }
 
         footer {
             text-align: center;
-            padding: 30px;
-            color: #64748b;
-            font-size: 13px;
+            padding: 27px 10px 32px;
+            color: #74839c;
+            font-size: 11px;
         }
 
-        /* RESPONSIVE */
-
         @media (max-width: 900px) {
-
             .cards {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
         @media (max-width: 600px) {
+            .container {
+                width: min(100% - 28px, 1480px);
+            }
+
+            header {
+                align-items: flex-start;
+                flex-direction: column;
+                gap: 16px;
+                padding-top: 25px;
+            }
 
             .cards {
                 grid-template-columns: 1fr;
+                gap: 10px;
             }
 
             .control-bar {
@@ -245,9 +434,31 @@
                 flex-direction: column;
             }
 
+            .section-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .table-tools {
+                width: 100%;
+            }
+
+            .table-tools input {
+                flex: 1;
+                width: auto;
+            }
+
             button {
-                margin-left: 0;
-                margin-right: 8px;
+                margin-right: 5px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
@@ -261,14 +472,15 @@
     <!-- HEADER -->
 
     <header>
-
-        <h1>
-            AI-Powered Intrusion Detection System
-        </h1>
-
-        <p>
-            Machine Learning + Blockchain Security Monitoring
-        </p>
+        <div>
+            <p class="eyebrow">NETWORK SECURITY / LIVE MONITORING</p>
+            <h1>AI-Powered Intrusion Detection System</h1>
+            <p>Machine-learning analysis with blockchain-backed alert records</p>
+        </div>
+        <div id="apiConnection" class="connection" role="status" aria-live="polite">
+            <span class="connection-dot" aria-hidden="true"></span>
+            <span id="apiConnectionText">Connecting to API</span>
+        </div>
 
     </header>
 
@@ -279,10 +491,7 @@
 
         <div class="status">
 
-            <div
-                id="statusDot"
-                class="status-dot stopped">
-            </div>
+            <div id="statusDot" class="status-dot stopped" aria-hidden="true"></div>
 
             <span id="statusText">
                 IDS STOPPED
@@ -308,6 +517,8 @@
 
         </div>
 
+        <div id="apiNotice" class="notice" role="alert"></div>
+
     </div>
 
 
@@ -326,7 +537,7 @@
                 class="card-value">
                 0
             </div>
-
+            <div class="card-note">Analyzed network conversations</div>
         </div>
 
 
@@ -341,7 +552,7 @@
                 class="card-value">
                 0
             </div>
-
+            <div class="card-note">Flows classified as attacks</div>
         </div>
 
 
@@ -356,7 +567,7 @@
                 class="card-value">
                 0
             </div>
-
+            <div class="card-note">Alerts raised this session</div>
         </div>
 
 
@@ -371,7 +582,7 @@
                 class="card-value">
                 0
             </div>
-
+            <div id="blockchainNote" class="card-note">Recorded on the blockchain</div>
         </div>
 
     </div>
@@ -383,9 +594,19 @@
 
         <div class="section-header">
 
-            <h2>
-                Live Network Analysis
-            </h2>
+            <div>
+                <h2>Live Network Analysis</h2>
+                <p class="section-description">Recent flows scored by the detection model</p>
+            </div>
+            <div class="table-tools">
+                <input id="flowSearch" type="search" placeholder="Search IP or protocol" aria-label="Search live flows">
+                <select id="predictionFilter" aria-label="Filter by prediction">
+                    <option value="all">All predictions</option>
+                    <option value="attack">Attacks</option>
+                    <option value="normal">Normal</option>
+                </select>
+                <span id="lastUpdated" class="updated">Waiting for first update</span>
+            </div>
 
         </div>
 
@@ -462,9 +683,10 @@
 
         <div class="section-header">
 
-            <h2>
-                Security Alerts
-            </h2>
+            <div>
+                <h2>Security Alerts</h2>
+                <p class="section-description">Model detections at or above 60% attack confidence</p>
+            </div>
 
         </div>
 
@@ -537,9 +759,10 @@
 
         <div class="section-header">
 
-            <h2>
-                Blockchain Alert Records
-            </h2>
+            <div>
+                <h2>Blockchain Alert Records</h2>
+                <p class="section-description">Recent alerts anchored to the configured chain</p>
+            </div>
 
         </div>
 
@@ -608,7 +831,7 @@
 
     <footer>
 
-        AI-Powered IDS • Random Forest • Scapy • SHA-256 • Ethereum/Ganache
+        AI-Powered IDS <span aria-hidden="true">·</span> Machine Learning <span aria-hidden="true">·</span> SHA-256 <span aria-hidden="true">·</span> Ethereum / Ganache
 
     </footer>
 
@@ -621,19 +844,107 @@
     // API HELPER
     // ========================================================
 
-    async function api(url, options = {}) {
+    let actionInProgress = false;
+    let refreshInProgress = false;
+    let latestResults = [];
+    let captureErrorMessage = null;
 
+    async function api(url, options = {}) {
         const response = await fetch(url, options);
 
         if (!response.ok) {
-
-            throw new Error(
-                "API error: " + response.status
-            );
-
+            throw new Error("API request failed (" + response.status + ")");
         }
 
-        return await response.json();
+        return response.json();
+    }
+
+    function escapeHTML(value) {
+        return String(value ?? "").replace(/[&<>"']/g, character => ({
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#39;"
+        })[character]);
+    }
+
+    function showNotice(message) {
+        const notice = document.getElementById("apiNotice");
+        notice.textContent = message;
+        notice.classList.add("visible");
+    }
+
+    function setAPIConnection(online) {
+        const connection = document.getElementById("apiConnection");
+        connection.className = "connection " + (online ? "online" : "offline");
+        document.getElementById("apiConnectionText").textContent =
+            online ? "API connected" : "API unavailable";
+    }
+
+    function setIDSUnavailable() {
+        document.getElementById("statusDot").className = "status-dot unavailable";
+        document.getElementById("statusText").textContent = "IDS STATUS UNAVAILABLE";
+        document.getElementById("startBtn").disabled = actionInProgress;
+        document.getElementById("stopBtn").disabled = actionInProgress;
+        document.getElementById("flowCount").textContent = "--";
+        document.getElementById("attackCount").textContent = "--";
+        document.getElementById("alertCount").textContent = "--";
+    }
+
+    function apiHelpMessage() {
+        const command = ".\\.venv\\Scripts\\python.exe -m uvicorn dashboard.main:app --reload";
+        if (location.protocol === "file:") {
+            return "This page was opened directly. From the project root, run `" + command + "`, then open http://127.0.0.1:8000.";
+        }
+
+        return "The dashboard API is not responding. From the project root, run `" + command + "`, then reload this page.";
+    }
+
+    function formatProbability(value, isPercent = false) {
+        const probability = Number(value);
+        if (!Number.isFinite(probability)) return "-";
+
+        return (isPercent ? probability : probability * 100).toFixed(2) + "%";
+    }
+
+    function renderResults() {
+        const search = document.getElementById("flowSearch").value.trim().toLowerCase();
+        const prediction = document.getElementById("predictionFilter").value;
+        const results = latestResults.filter(item => {
+            const matchesPrediction = prediction === "all" ||
+                String(item.prediction || "").toLowerCase() === prediction;
+            const searchable = [item.src_ip, item.dst_ip, item.protocol, item.prediction]
+                .join(" ").toLowerCase();
+            return matchesPrediction && searchable.includes(search);
+        });
+        const table = document.getElementById("resultsTable");
+
+        if (results.length === 0) {
+            table.innerHTML = `<tr><td colspan="8" class="empty">${latestResults.length
+                ? "No flows match these filters."
+                : "No flows analyzed yet."}</td></tr>`;
+            return;
+        }
+
+        table.innerHTML = results.map(item => {
+            const isAttack = String(item.prediction || "").toUpperCase() === "ATTACK";
+            const predictionClass = isAttack ? "attack" : "normal";
+            const statusClass = item.security_alert ? "alert" : "normal";
+            const predictionText = escapeHTML(item.prediction || "UNKNOWN");
+            const statusText = item.security_alert ? "SECURITY ALERT" : "MONITORED";
+            return `
+                <tr>
+                    <td>${escapeHTML(formatTime(item.timestamp))}</td>
+                    <td>${escapeHTML(item.src_ip)}:${escapeHTML(item.src_port)}</td>
+                    <td>${escapeHTML(item.dst_ip)}:${escapeHTML(item.dst_port)}</td>
+                    <td>${escapeHTML(item.protocol)}</td>
+                    <td>${escapeHTML(item.packets)}</td>
+                    <td class="${predictionClass}">${predictionText}</td>
+                    <td>${formatProbability(item.attack_probability)}</td>
+                    <td class="${statusClass}">${statusText}</td>
+                </tr>`;
+        }).join("");
     }
 
 
@@ -642,34 +953,7 @@
     // ========================================================
 
     async function startIDS() {
-
-        try {
-
-            const data = await api(
-                "/api/ids/start",
-                {
-                    method: "POST"
-                }
-            );
-
-            console.log("IDS started:", data);
-
-            updateStatus(data.status);
-
-            await refreshDashboard();
-
-        }
-        catch (error) {
-
-            console.error(error);
-
-            alert(
-                "Could not start IDS.\n\n" +
-                error.message
-            );
-
-        }
-
+        await runIDSAction(true);
     }
 
 
@@ -678,34 +962,35 @@
     // ========================================================
 
     async function stopIDS() {
+        await runIDSAction(false);
+    }
+
+    async function runIDSAction(starting) {
+        if (actionInProgress) return;
+
+        actionInProgress = true;
+        const startButton = document.getElementById("startBtn");
+        const stopButton = document.getElementById("stopBtn");
+        startButton.disabled = true;
+        stopButton.disabled = true;
+        startButton.textContent = starting ? "STARTING..." : "START LIVE IDS";
+        stopButton.textContent = starting ? "STOP IDS" : "STOPPING...";
 
         try {
-
             const data = await api(
-                "/api/ids/stop",
-                {
-                    method: "POST"
-                }
+                starting ? "/api/ids/start" : "/api/ids/stop",
+                { method: "POST" }
             );
-
-            console.log("IDS stopped:", data);
-
             updateStatus(data.status);
-
+        } catch (error) {
+            console.error("IDS control error:", error);
+            showNotice("Could not " + (starting ? "start" : "stop") + " the IDS: " + error.message);
+        } finally {
+            actionInProgress = false;
+            startButton.textContent = "START LIVE IDS";
+            stopButton.textContent = "STOP IDS";
             await refreshDashboard();
-
         }
-        catch (error) {
-
-            console.error(error);
-
-            alert(
-                "Could not stop IDS.\n\n" +
-                error.message
-            );
-
-        }
-
     }
 
 
@@ -727,6 +1012,19 @@
         const stopButton =
             document.getElementById("stopBtn");
 
+        captureErrorMessage = status.capture_error || null;
+
+        if (captureErrorMessage) {
+            dot.className = "status-dot unavailable";
+            text.textContent = "PACKET CAPTURE FAILED";
+            startButton.disabled = actionInProgress;
+            stopButton.disabled = true;
+            showNotice(
+                "Packet capture failed: " + captureErrorMessage +
+                ". On Windows, run VS Code as Administrator and confirm Npcap is installed."
+            );
+            return;
+        }
 
         if (status.running) {
 
@@ -738,7 +1036,7 @@
 
             startButton.disabled = true;
 
-            stopButton.disabled = false;
+            stopButton.disabled = actionInProgress;
 
         }
         else {
@@ -749,7 +1047,7 @@
             text.textContent =
                 "IDS STOPPED";
 
-            startButton.disabled = false;
+            startButton.disabled = actionInProgress;
 
             stopButton.disabled = true;
 
@@ -769,6 +1067,7 @@
             const status =
                 await api("/api/ids/status");
 
+            setAPIConnection(true);
             updateStatus(status);
 
             document.getElementById("flowCount")
@@ -788,6 +1087,9 @@
                 error
             );
 
+            setAPIConnection(false);
+            setIDSUnavailable();
+            throw error;
         }
 
     }
@@ -804,100 +1106,8 @@
             const data =
                 await api("/api/ids/results");
 
-            const results =
-                data.results || [];
-
-            const table =
-                document.getElementById(
-                    "resultsTable"
-                );
-
-
-            if (results.length === 0) {
-
-                table.innerHTML = `
-                    <tr>
-                        <td colspan="8" class="empty">
-                            No flows analyzed yet.
-                        </td>
-                    </tr>
-                `;
-
-                return;
-            }
-
-
-            table.innerHTML =
-                results.map(item => {
-
-                    const predictionClass =
-                        item.prediction === "ATTACK"
-                            ? "attack"
-                            : "normal";
-
-                    const statusClass =
-                        item.security_alert
-                            ? "alert"
-                            : "normal";
-
-                    const predictionText =
-                        item.prediction;
-
-                    const statusText =
-                        item.security_alert
-                            ? "SECURITY ALERT"
-                            : "MONITORED";
-
-
-                    const time =
-                        formatTime(
-                            item.timestamp
-                        );
-
-
-                    return `
-
-                        <tr>
-
-                            <td>
-                                ${time}
-                            </td>
-
-                            <td>
-                                ${item.src_ip}:${item.src_port}
-                            </td>
-
-                            <td>
-                                ${item.dst_ip}:${item.dst_port}
-                            </td>
-
-                            <td>
-                                ${item.protocol}
-                            </td>
-
-                            <td>
-                                ${item.packets}
-                            </td>
-
-                            <td class="${predictionClass}">
-                                ${predictionText}
-                            </td>
-
-                            <td>
-                                ${(
-                                    item.attack_probability * 100
-                                ).toFixed(2)}%
-                            </td>
-
-                            <td class="${statusClass}">
-                                ${statusText}
-                            </td>
-
-                        </tr>
-
-                    `;
-
-                }).join("");
+            latestResults = data.results || [];
+            renderResults();
 
         }
         catch (error) {
@@ -907,6 +1117,10 @@
                 error
             );
 
+            document.getElementById("resultsTable").innerHTML = `
+                <tr><td colspan="8" class="empty">Dashboard API unavailable. Retrying...</td></tr>
+            `;
+            throw error;
         }
 
     }
@@ -954,32 +1168,32 @@
                         <tr>
 
                             <td>
-                                ${formatTime(alert.timestamp)}
+                                ${escapeHTML(formatTime(alert.timestamp))}
                             </td>
 
                             <td>
-                                ${alert.src_ip}:${alert.src_port}
+                                ${escapeHTML(alert.src_ip)}:${escapeHTML(alert.src_port)}
                             </td>
 
                             <td>
-                                ${alert.dst_ip}:${alert.dst_port}
+                                ${escapeHTML(alert.dst_ip)}:${escapeHTML(alert.dst_port)}
                             </td>
 
                             <td>
-                                ${alert.protocol}
+                                ${escapeHTML(alert.protocol)}
                             </td>
 
                             <td class="alert">
-                                ${alert.attack_probability}%
+                                ${formatProbability(alert.attack_probability, true)}
                             </td>
 
                             <td>
-                                ${alert.alert_reason}
+                                ${escapeHTML(alert.alert_reason)}
                             </td>
 
                             <td class="blockchain">
                                 ${
-                                    alert.blockchain_block
+                                    escapeHTML(alert.blockchain_block)
                                     ? "Block " +
                                       alert.blockchain_block
                                     : "Pending"
@@ -1000,6 +1214,10 @@
                 error
             );
 
+            document.getElementById("alertsTable").innerHTML = `
+                <tr><td colspan="7" class="empty">Dashboard API unavailable. Retrying...</td></tr>
+            `;
+            throw error;
         }
 
     }
@@ -1029,7 +1247,9 @@
 
             document.getElementById(
                 "blockchainCount"
-            ).textContent = alerts.length;
+            ).textContent = data.connected ? (data.total_count ?? alerts.length) : "--";
+            document.querySelector(".card:nth-child(4) .card-note").textContent =
+                data.connected ? "Recorded on the configured chain" : "Blockchain unavailable";
 
 
             if (alerts.length === 0) {
@@ -1037,7 +1257,7 @@
                 table.innerHTML = `
                     <tr>
                         <td colspan="7" class="empty">
-                            No blockchain records.
+                            ${data.connected ? "No blockchain records yet." : "Blockchain unavailable. Check the configured RPC node."}
                         </td>
                     </tr>
                 `;
@@ -1054,31 +1274,31 @@
                         <tr>
 
                             <td>
-                                ${alert.id}
+                                ${escapeHTML(alert.id)}
                             </td>
 
                             <td>
-                                ${formatTime(alert.timestamp)}
+                                ${escapeHTML(formatTime(alert.timestamp))}
                             </td>
 
                             <td>
-                                ${alert.src_ip}:${alert.src_port}
+                                ${escapeHTML(alert.src_ip)}:${escapeHTML(alert.src_port)}
                             </td>
 
                             <td>
-                                ${alert.dst_ip}:${alert.dst_port}
+                                ${escapeHTML(alert.dst_ip)}:${escapeHTML(alert.dst_port)}
                             </td>
 
                             <td>
-                                ${alert.protocol}
+                                ${escapeHTML(alert.protocol)}
                             </td>
 
                             <td class="alert">
-                                ${alert.attack_probability}%
+                                ${formatProbability(alert.attack_probability, true)}
                             </td>
 
                             <td
-                                title="${alert.hash}"
+                                title="${escapeHTML(alert.hash)}"
                                 style="
                                     max-width:180px;
                                     overflow:hidden;
@@ -1086,7 +1306,7 @@
                                     white-space:nowrap;
                                 "
                             >
-                                ${alert.hash}
+                                ${escapeHTML(alert.hash)}
                             </td>
 
                         </tr>
@@ -1103,6 +1323,12 @@
                 error
             );
 
+            document.getElementById("blockchainCount").textContent = "--";
+            document.getElementById("blockchainNote").textContent = "Connection unavailable";
+            document.getElementById("blockchainTable").innerHTML = `
+                <tr><td colspan="7" class="empty">Dashboard API unavailable. Retrying...</td></tr>
+            `;
+            throw error;
         }
 
     }
@@ -1118,19 +1344,10 @@
             return "-";
         }
 
-        try {
-
-            const date =
-                new Date(timestamp);
-
-            return date.toLocaleTimeString();
-
-        }
-        catch {
-
-            return timestamp;
-
-        }
+        const date = new Date(timestamp);
+        return Number.isNaN(date.getTime())
+            ? String(timestamp)
+            : date.toLocaleTimeString();
 
     }
 
@@ -1140,13 +1357,33 @@
     // ========================================================
 
     async function refreshDashboard() {
+        if (refreshInProgress) return;
+        refreshInProgress = true;
 
-        await Promise.all([
-            refreshStatus(),
-            refreshResults(),
-            refreshAlerts(),
-            refreshBlockchain()
-        ]);
+        try {
+            const outcomes = await Promise.allSettled([
+                refreshStatus(),
+                refreshResults(),
+                refreshAlerts(),
+                refreshBlockchain()
+            ]);
+            const failedRequests = outcomes.filter(result => result.status === "rejected");
+
+            if (failedRequests.length) {
+                showNotice(apiHelpMessage());
+            } else if (captureErrorMessage) {
+                showNotice(
+                    "Packet capture failed: " + captureErrorMessage +
+                    ". On Windows, run VS Code as Administrator and confirm Npcap is installed."
+                );
+            } else {
+                document.getElementById("apiNotice").classList.remove("visible");
+                document.getElementById("lastUpdated").textContent =
+                    "Updated " + new Date().toLocaleTimeString();
+            }
+        } finally {
+            refreshInProgress = false;
+        }
 
     }
 
@@ -1157,6 +1394,9 @@
 
     refreshDashboard();
 
+    document.getElementById("flowSearch").addEventListener("input", renderResults);
+    document.getElementById("predictionFilter").addEventListener("change", renderResults);
+
 
     // ========================================================
     // LIVE REFRESH
@@ -1164,7 +1404,7 @@
 
     setInterval(
         refreshDashboard,
-        1000
+        3000
     );
 
 </script>

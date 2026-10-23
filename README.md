@@ -117,6 +117,17 @@ A web-based dashboard is included for interacting with and visualizing the IDS c
 
 ---
 
+## Running the dashboard on Windows
+
+From the project root, start the dashboard with the project virtual environment:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn dashboard.main:app --reload
+```
+
+Then open [http://127.0.0.1:8000](http://127.0.0.1:8000). The page needs the FastAPI server for live status, network analysis, and alert data.
+
+
 # 🧠 Machine Learning Pipeline
 
 The project contains several ML components that can be used independently or together.

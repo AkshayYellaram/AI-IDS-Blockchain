@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 import json
+from pathlib import Path
 
 from web3 import Web3
 
@@ -32,8 +33,9 @@ app.add_middleware(
 # PATHS
 # ============================================================
 
-ABI_FILE = "blockchain/AlertStorage_abi.json"
-DASHBOARD_FILE = "dashboard/index.html"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+ABI_FILE = PROJECT_ROOT / "blockchain" / "AlertStorage_abi.json"
+DASHBOARD_FILE = PROJECT_ROOT / "dashboard" / "index.html"
 
 
 # ============================================================
@@ -45,7 +47,7 @@ w3 = Web3(Web3.HTTPProvider(GANACHE_RPC))
 contract = None
 
 try:
-    with open(ABI_FILE, "r") as f:
+    with open(ABI_FILE, "r", encoding="utf-8") as f:
         abi = json.load(f)
 
     contract = w3.eth.contract(
@@ -197,16 +199,20 @@ def blockchain_alerts():
     if contract is None:
         return {
             "connected": False,
-            "alerts": []
+            "alerts": [],
+            "total_count": 0
         }
 
     try:
 
         count = contract.functions.alertCount().call()
 
+        # The dashboard only displays recent entries. Reading the whole chain
+        # on every polling cycle makes the UI progressively slower over time.
+        first_id = max(1, count - 19)
         alerts = []
 
-        for i in range(1, count + 1):
+        for i in range(first_id, count + 1):
 
             alert = contract.functions.getAlert(i).call()
 
@@ -224,7 +230,8 @@ def blockchain_alerts():
 
         return {
             "connected": True,
-            "alerts": list(reversed(alerts))
+            "alerts": list(reversed(alerts)),
+            "total_count": count
         }
 
     except Exception as e:
@@ -232,6 +239,7 @@ def blockchain_alerts():
         return {
             "connected": False,
             "alerts": [],
+            "total_count": 0,
             "error": str(e)
         }
 
